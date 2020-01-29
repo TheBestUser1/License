@@ -2,15 +2,21 @@
 
 {% block content %}
 
+
 <div class="row">
     {% for t in Tech %}
-        <div class="col s12 m6">
+    <form method ="POST">
+	{% csrf_token %}
+	<div class="col s12 m6">
           <div class="card blue-grey darken-1 hoverable">
             <div class="card-content white-text">
               <span class="card-title">{{t.Technique_name}}</span>
               <p>{{t.Technique_content|safe}}</p>
-            </div>
+           <button style="background-color:#F4EB16; color:blue" class="btn btn-outline-info" type="submit">Go</button>
+
+	    </div>
           </div>
+    </form>
         </div>
 {% endfor %}
 
