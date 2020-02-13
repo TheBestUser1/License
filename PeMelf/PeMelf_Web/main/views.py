@@ -1,6 +1,10 @@
 from django.shortcuts import render,redirect
-from .models import Techniques
-from .test import write_file #aici am inclus scriptul
+from .models import Techniques, Document
+#from .test import write_file #aici am inclus scriptul
+from django.http import HttpResponseRedirect
+from .my_forms import UploadFileForm
+#from .file_handle import handle_uploaded_file
+
 
 def homepage(request):
     if request.method == "POST":
@@ -21,7 +25,21 @@ def test(request):
 # Create your views here.
 
 def upload(request):
+     form = UploadFileForm()
+     if request.method == 'POST':
+        form = UploadFileForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            #form.save()
+
+            file = form.save(commit=False)
+            file.myfile =request.FILES['myfile']
+            file.title = 'ceva'
+            file.save()
+            return redirect("main:homepage")
 
 
-    return render(request=request,
-                template_name="main/upload.html")
+
+     return render(request=request,
+                    template_name="main/upload.html",
+                    context={"form":form})
