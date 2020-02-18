@@ -3,13 +3,16 @@ from .models import Techniques, Document
 #from .test import write_file #aici am inclus scriptul
 from django.http import HttpResponseRedirect
 from .my_forms import UploadFileForm
+from django.utils import timezone
 #from .file_handle import handle_uploaded_file
 
 
 def homepage(request):
-    if request.method == "POST":
-        write_file()
+    if request.method =="POST":
+        breakpoint()
+        print(request.POST)
         return redirect("main:homepage")
+
 
     return render(request=request,
                     template_name="main/main.html",
@@ -34,7 +37,7 @@ def upload(request):
 
             file = form.save(commit=False)
             file.myfile =request.FILES['myfile']
-            file.title = 'ceva'
+            file.date_added  = timezone.now()
             file.save()
             return redirect("main:homepage")
 

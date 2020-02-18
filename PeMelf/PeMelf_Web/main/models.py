@@ -11,6 +11,7 @@ class Techniques(models.Model):
 
 class Document(models.Model):
     title = models.CharField(max_length=50)
+    date_added = models.DateTimeField('date published')
     myfile = models.FileField()
 
     def __str__(self):

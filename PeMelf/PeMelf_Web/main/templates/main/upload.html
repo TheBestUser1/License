@@ -1,14 +1,33 @@
-{% extends 'main/header.html' %}
-{% block content %}
+<html>
+<head>
+  <title>File Upload</title>
 
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{form.errors}}
-    <input type="file" name="myfile">
-    <button type="submit">Upload</button>
-  </form>
+  </head>
+  {% load static %}
+  <link rel="stylesheet" href='{% static "main/css/upload.css" %}'>
+  <link rel="stylesheet" href='{% static "main/css/materialize.css" %}'>
+  <link rel="stylesheet" href='{% static "main/java/upload.js" %}'>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<body>
+  <nav>
+      <div class="nav-wrapper">
+        <a href="/" class="brand-logo">Tutorials</a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          {% include 'main/includes/navbaritems.html' %}
+        </ul>
+      </div>
+    </nav>
 
+<form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  <input type="file" name = "myfile">
+  <p>Drag your files here or click in this area.</p>
+  <button type="submit">Upload</button>
+</form>
 
+</body>
+</html>
 
+<script type="text/javascript">
 
-{% endblock %}
+</script>
