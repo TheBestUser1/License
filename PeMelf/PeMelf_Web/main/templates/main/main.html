@@ -7,7 +7,7 @@
     {% for t in Tech %}
     <form method ="POST">
 	{% csrf_token %}
-   <input type="hidden" name="id_technique" value="{{t.id}}" />
+   <input type="hidden" name="script" value="{{t.Technique_script}}" />
 	<div class="col s12 m6">
           <div class="card blue-grey darken-1 hoverable">
             <div class="card-content white-text">

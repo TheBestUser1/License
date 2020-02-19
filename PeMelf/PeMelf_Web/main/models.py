@@ -4,6 +4,7 @@ from django import forms
 class Techniques(models.Model):
     Technique_name = models.CharField(max_length=200)
     Technique_content = models.TextField()
+    Technique_script = models.CharField(max_length=20)
 
     def __str__(self):
         return self.Technique_name

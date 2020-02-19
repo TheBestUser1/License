@@ -6,11 +6,27 @@ from .my_forms import UploadFileForm
 from django.utils import timezone
 #from .file_handle import handle_uploaded_file
 
+from .path_finder import find_path
+
+import sys,os
+import importlib.util
+
 
 def homepage(request):
     if request.method =="POST":
         breakpoint()
-        print(request.POST)
+        file_path=os.path.abspath('.')+"/scripts/"+request.POST['script']
+        module_name = request.POST['script'].split('.')[0]
+        #script_path= os.path.abspath(X)
+        #pkg = importlib.import_module('..*',request.POST['script'])
+        #importlib.import_module("scripts")
+
+        spec = importlib.util.spec_from_file_location(module_name, file_path)
+        module = importlib.util.module_from_spec(spec)
+        #sys.modules[module_name] = module
+        spec.loader.exec_module(module)
+        module.printing()
+        
         return redirect("main:homepage")
 
 
