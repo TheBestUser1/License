@@ -14,6 +14,7 @@ class Document(models.Model):
     title = models.CharField(max_length=50)
     date_added = models.DateTimeField('date published')
     myfile = models.FileField()
+    user_token=models.CharField(max_length=200)
 
     def __str__(self):
         return self.title
