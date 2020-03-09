@@ -12,7 +12,7 @@ rule Cobalt_functions
 
     strings:
 
-        $h1={58 A4 53 E5} // VirtualAllocEx
+
         $h2={4C 77 26 07} // LoadLibraryEx
         $h3={6A C9 9C C9} // DNSQuery_UTF8
         $h4={44 F0 35 E0} // Sleep
