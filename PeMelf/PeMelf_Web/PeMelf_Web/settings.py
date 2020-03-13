@@ -25,7 +25,12 @@ SECRET_KEY = 'x#%d2hxle(_romv)!db-xsdz=tdt$ky=7k5aj3+4mep^brlq&v'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["83259acf.ngrok.io","8bd8b0ca.ngrok.io","localhost","127.0.0.1"]
+ALLOWED_HOSTS = ["83259acf.ngrok.io",
+                "8bd8b0ca.ngrok.io",
+                "localhost",
+                "127.0.0.1",
+                "d3a4c0c1.ngrok.io",
+                "48171d45.ngrok.io"]
 
 
 # Application definition

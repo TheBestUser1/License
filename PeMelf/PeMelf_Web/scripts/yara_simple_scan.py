@@ -10,7 +10,8 @@ def main(filename=None):
         return 0
     r2 = r2pipe.open(filename)
     data = json.loads(r2.cmd('iaj'))
-    return data['info']
+    
+    return data
 
 
 if __name__=="__main__":
