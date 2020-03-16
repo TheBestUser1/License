@@ -2,11 +2,11 @@
 {% block content %}
 
 <div class="row">
-
+<!-- INFOS Bin-->
   <div class="col s3">
     <div class="card blue-grey darken-1 hoverable">
         <div class="card-content white-text">
-          
+<h1>Bin Info</h1>
 {% for key,data in info.items %}
 
 <div class="divider"></div>
@@ -19,10 +19,28 @@
 </div>
 </div>
 </div>
+<!-- Script output -->
 <div class="col s9">
-
+      <p>CEVA</p>
 </div>
 
+<!-- Infos -->
+<div class="col s13">
+  <div class="card blue-grey darken-1 hoverable">
+      <div class="card-content white-text">
+
+  <h1>Imports</h1>
+{% for imp in imports %}
+
+<div class="divider"></div>
+  <div class="section">
+    <h7 class="left-align">{{imp}}</h7>
+  </div>
+
+{% endfor %}
+  </div>
+</div>
+</div>
 
   </div>
 

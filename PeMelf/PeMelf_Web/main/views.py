@@ -10,7 +10,7 @@ import importlib.util
 
 def homepage(request):
     if request.method =="POST":
-        breakpoint()
+    #    breakpoint()
         filename=Document.objects.filter(user_token=request.COOKIES['csrftoken']\
         ).order_by('-date_added').values()[0]['myfile']
         path_to_bin=os.path.join(os.path.abspath("files"),filename)

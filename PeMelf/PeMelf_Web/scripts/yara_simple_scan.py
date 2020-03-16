@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
-import os
-import json
-import r2pipe
+from scripts.r2c import rbin
 
+#import r2pipe
 
 
 def main(filename=None):
     if filename == None:
         return 0
-    r2 = r2pipe.open(filename)
-    data = json.loads(r2.cmd('iaj'))
-    
+    r2 = rbin(filename)
+    data=r2.get_info()
     return data
 
 

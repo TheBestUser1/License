@@ -2609,7 +2609,7 @@ table span.badge {
       left: auto;
       right: auto; }
     .row .col.s3 {
-      width: 25%;
+      width: 20%;
       margin-left: auto;
       left: auto;
       right: auto; }
@@ -2639,7 +2639,7 @@ table span.badge {
       left: auto;
       right: auto; }
     .row .col.s9 {
-      width: 75%;
+      width: 60%;
       margin-left: auto;
       left: auto;
       right: auto; }
@@ -2658,6 +2658,11 @@ table span.badge {
       margin-left: auto;
       left: auto;
       right: auto; }
+    .row .col.s13 {
+      width: 20%;
+      margin-left:auto;
+      left:auto;
+      right: auto;}
     .row .col.offset-s1 {
       margin-left: 8.3333333333%; }
     .row .col.pull-s1 {
