@@ -21,7 +21,14 @@
 </div>
 <!-- Script output -->
 <div class="col s9">
-      <p>CEVA</p>
+      <h1>Results:</h1>
+{% for result in results %}
+      <div class="divider"></div>
+        <div class="section">
+          <h5 class="center-align">{{result}}</h5>
+
+        </div>
+{% endfor %}
 </div>
 
 <!-- Infos -->

@@ -23,7 +23,6 @@ class rbin:
         data_f['info']['pic']=data['bin']['pic']
         data_f['info']['relocs']=data['bin']['relocs']
         data_f['info']['stripped']=data['bin']['stripped']
-        
 
         data_f["imports"]=[]
         imports = json.loads(self.r2.cmd("iij"))
@@ -32,6 +31,8 @@ class rbin:
 
         return data_f
 
+    def get_obj(self):
+        return self.r2
 
 
 
