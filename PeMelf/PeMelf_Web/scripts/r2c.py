@@ -34,6 +34,36 @@ class rbin:
     def get_obj(self):
         return self.r2
 
+    def check_addr(self,addr):
+        if self.r2.cmd("pd 1 @ {}~invalid".format(addr))=='':
+            return True
+        return False
+
+    def is_number(self,s):
+        try:
+            int(s,base=16)
+            return True
+        except ValueError:
+            return False
+
+    def find_function(self,addr):
+        blob={}
+        if self.check_addr(addr):
+
+            block_function=self.r2.cmd("pd @ {}-32~push,call[4]".format(addr))
+            function = block_function.strip('\n').split('\n')
+            function.reverse()
+            blob[function[0]]={}
+            blob[function[0]]['adrese']=[]
+            blob[function[0]]['valori']=[]
+            for i in range(1,len(function)-1):
+
+                if(self.check_addr(function[i])):
+                    blob[function[0]]['adrese'].append(function[i])
+                else:
+                    if self.is_number(function[i]):
+                        blob[function[0]]['valori'].append(function[i])
+        return blob
 
 
 
