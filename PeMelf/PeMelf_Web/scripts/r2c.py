@@ -46,23 +46,39 @@ class rbin:
         except ValueError:
             return False
 
-    def find_function(self,addr):
-        blob={}
-        if self.check_addr(addr):
+    def find_occurence(self,addr):
+        occurences = self.r2.cmd("axt @ {}~[1]".format(addr)).strip("\n").split("\n")
+        return occurences
 
+    def find_args(self,addr,blob):
+        if self.check_addr(addr):
             block_function=self.r2.cmd("pd @ {}-32~push,call[4]".format(addr))
             function = block_function.strip('\n').split('\n')
             function.reverse()
-            blob[function[0]]={}
-            blob[function[0]]['adrese']=[]
-            blob[function[0]]['valori']=[]
+            if bool(blob)==False:
+                addr = self.find_occurence(function[0])[0]
+                blob[function[0]]={addr:{}}
+            else:
+                blob[function[0]][addr]={}
+
+            blob[function[0]][addr]['adress']=[]
+            blob[function[0]][addr]['values']=[]
+
             for i in range(1,len(function)-1):
 
                 if(self.check_addr(function[i])):
-                    blob[function[0]]['adrese'].append(function[i])
+                    blob[function[0]][addr]['adress'].append(function[i])
                 else:
                     if self.is_number(function[i]):
-                        blob[function[0]]['valori'].append(function[i])
+                        blob[function[0]][addr]['values'].append(function[i])
+        return blob
+
+    def find_function(self,addr):
+        blob={}
+        blob=self.find_args(addr,blob)
+        occurences = self.find_occurence(next(iter(blob)))
+        for i in range(1,len(occurences)):
+            blob=self.find_args(occurences[i],blob)
         return blob
 
 

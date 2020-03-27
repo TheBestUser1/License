@@ -19,6 +19,14 @@ def find_function_refs(data,r2):
 
     return ref_use
 
+def proc_f(refs,r2):
+    key = next(iter(refs))
+    breakpoint()
+    for i in refs[key]:
+        print(i)
+    return True
+
+
 
 def find_bin(r2):
 
@@ -28,8 +36,9 @@ def find_bin(r2):
     data_serialized = [f for f in data_sections if f!='']
     refs = find_refs(data_serialized)
     for i in refs:
-        breakpoint()
+
         f_refs = r2.find_function(i)
+        proc_f(f_refs,r_obj)
         #here we treat the function and try to export everything from
         #data section
 
