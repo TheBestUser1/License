@@ -24,6 +24,8 @@ def proc_f(refs,r2):
     key = next(iter(refs))
     breakpoint()
     dumps=[]
+
+#dumping packed bytes
     for i in refs[key]:
         addr=refs[key][i]['adress'][0]
         value=refs[key][i]['values'][0]
@@ -38,6 +40,10 @@ def proc_f(refs,r2):
             os.rename(path_to_dump,name_of_file)
             dumps.append(name_of_file)
 
+#trying to figure out decrypt function
+
+    
+
     return True
 
 
@@ -50,7 +56,6 @@ def find_bin(r2):
     data_serialized = [f for f in data_sections if f!='']
     refs = find_refs(data_serialized)
     for i in refs:
-
         f_refs = r2.find_function(i)
         proc_f(f_refs,r_obj)
 
