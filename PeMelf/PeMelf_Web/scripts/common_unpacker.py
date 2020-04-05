@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 #from scripts.r2c import rbin
+#it's just in buillding stage :D
 from r2c import *
 import hashlib
 import os
@@ -42,7 +43,7 @@ def proc_f(refs,r2):
 
 #trying to figure out decrypt function
 
-    
+
 
     return True
 

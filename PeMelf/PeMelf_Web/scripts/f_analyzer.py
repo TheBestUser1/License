@@ -19,7 +19,7 @@ def proc_lines(col,ref,ops):
             elif ('byte' in col[1]):
                 ref[0] = col[2]
 
-#you have to treat casses like this and go on ... 
+#you have to treat casses like this and go on ...
         elif 'add' in col[0]:
             if col[1]==ref[0]:
                 if ref[1]==0:
@@ -32,10 +32,10 @@ def proc_lines(col,ref,ops):
 
 
 def find_logic(r2,f):
-    
-    
-    r2.cmd("s {}".format(f))    
-    
+
+
+    r2.cmd("s {}".format(f))
+
     args = r2.cmd('afvb~arg[2]').split("\n")
     del(args[-1])
     operations = dict.fromkeys(args,'')
@@ -49,13 +49,12 @@ def find_logic(r2,f):
         while read_inst !='ret':
             breakpoint()
             read_inst = r2.cmd("pd {} @ {}~:{}[3-6]".format(j,addr_of_read,j-1)).strip("\n")
-            line = read_inst.split(" ")
-            
+            line = read_inst.split(" ")            
             ref = proc_lines(line,ref,operations)
             j+=1
-            
 
-    
+
+
 
 
     return 0
