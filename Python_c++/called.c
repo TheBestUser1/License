@@ -24,6 +24,7 @@ int main()
   fread((unsigned char*)((void*)function),size,1,p);*/
   void *test = mmap(0,size,PROT_EXEC|PROT_READ,MAP_PRIVATE,fd,0);
   //memcpy(test,function,size);
+  printf("it's working till here\n");
   _function a = (_function)test;
   a();
 
