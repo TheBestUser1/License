@@ -1,7 +1,7 @@
 #include<iostream>
 #include<windows.h>
 
-typedef LPVOID* (*_func)(void*, void*, void*, void*);
+typedef LPVOID* (*_func)(void*, void*, char*, void*);
 
 int main(int argc, char**argv) {
 
@@ -10,17 +10,20 @@ int main(int argc, char**argv) {
 	DWORD read;
 	CHAR* BUFF = new CHAR[size];
 	int ok = ReadFile(bytes, BUFF, size, &read, 0);
-  HANDLE bytes2 = CreateFileA(argv[2],GENERIC_READ,FILE_SHARE_READ,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
-  DWORD size2 = GetFileSize(bytes2,NULL);
-  CHAR* Crypted = new CHAR[size2];
 
+	HANDLE bytes_d = CreateFileA(argv[2], GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	DWORD size2 = GetFileSize(bytes_d,NULL);
+	CHAR * BUFF2 = new CHAR[size2];
+	DWORD read_d;
+	int ok2 = ReadFile(bytes_d, BUFF2, size2, &read_d, 0);
 
-	LPVOID addr_exec = VirtualAlloc(NULL, size, MEM_COMMIT | MEM_RESERVE, PAGE_EXECUTE_READWRITE);
+	LPVOID addr_exec = VirtualAlloc(NULL, size, MEM_COMMIT,PAGE_EXECUTE_READWRITE);
 
 	memcpy(addr_exec, BUFF, read);
+
 	_func run = (_func)addr_exec;
-  std::cout<<"Here we got and we are fine"<<std::endl;
-  run(NULL,NULL,NULL,NULL);
+	char file[] = "ceva";
+	run((void*)((CHAR*)BUFF2),(DWORD*)size,file,(char*)'r');
 
 	return 0;
 }
