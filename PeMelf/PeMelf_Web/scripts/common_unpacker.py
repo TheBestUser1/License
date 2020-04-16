@@ -18,12 +18,11 @@ def find_refs(data):
 
 def find_function_refs(data,r2):
     ref_use = r2.cmd("pd ".format(data))
-
     return ref_use
 
 def proc_f(refs,r2):
     key = next(iter(refs))
-    breakpoint()
+
     dumps=[]
 
 #dumping packed bytes

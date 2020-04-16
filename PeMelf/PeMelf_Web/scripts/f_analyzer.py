@@ -4,7 +4,7 @@ import os
 import re
 
 
-registers = {'eax':'','ebx':'','ecx':'','edx':'','ebp':'','esp':'','edi':'','esi':'','eip':''}
+
 regex_signs = '[\-+^*/]'
 
 def signe_test(signe,line):
@@ -15,22 +15,22 @@ def signe_test(signe,line):
     return signe,line
 
 def proc_lines(char_lines,operations):
-  
+
     for i in char_lines:
         still_line = 1
         while still_line:
             pointer=re.search("\*\(char \*\)\(.*?\) ",i)
-            
-           #check for pointer increment (in this way we find our interest var) 
+
+           #check for pointer increment (in this way we find our interest var)
             if pointer is not None:
-                
+
                 values = re.sub("\*\(char \*\)\(",'',pointer.group()).strip(") ")
-                
+
                 signe = re.search(regex_signs,values)
-                
-                
+
+
                 signe,i=signe_test(signe,i)
-            
+
                 if signe:
                     argv = values.split(signe)
                     argv=[i.strip(' ') for i in argv]
@@ -42,34 +42,34 @@ def proc_lines(char_lines,operations):
                         operations['buffer']['decrypt']='buffer[i]'
                         del operations[argv[0]]
                     i = i.replace(pointer.group(),'buffer')
-            
+
             pointer=re.search("\(buffer.*?\).*?\) ",i)
             if pointer is not None:
-                
+
                 signe = re.search(regex_signs,pointer.group())
                 signe,i = signe_test(signe,i)
-                
+
                 if signe:
                     argv = pointer.group().split(signe)
                     argv =[i.strip(' ') for i in argv]
                     argv_1 = re.sub("\(.*?\)",'',argv[1]).strip(") ")
                     if argv_1:
                         argv[1]=argv_1
-                        
+
                     #here we should see in future if argv[1] is modified not just a parameter
                     if argv[1] in operations:
                         operations['buffer']['decrypt']+=' {} {}'.format(signe,'brute_v')
                     elif argv[1]==operations['buffer']['index']:
                         operations['buffer']['decrypt']+=' {} {}'.format(signe,'i')
                     i=i.replace(pointer.group(),'buffer')
-                    
+
             pointer=re.search("buffer.*?$",i)
-                    #here we parse the last thing from command  
+                    #here we parse the last thing from command
             if pointer is not None:
-                
+
                 signe = re.search(regex_signs,pointer.group())
                 signe,i = signe_test(signe,i)
-                
+
                 if signe:
                     argv = pointer.group().split(signe)
                     argv = [i.strip(' ') for i in argv]
@@ -82,23 +82,21 @@ def proc_lines(char_lines,operations):
                     elif argv[1]==operations['buffer']['index']:
                         operations['buffer']['decrypt']+=' {} {}'.format(signe,'i')
                     i=i.replace(pointer.group(),'buffer')
-                breakpoint()            
+
             still_line=0
     return operations
 
 
 def find_logic(r2,f):
 
-
     r2.cmd("s {}".format(f))
-
     args = r2.cmd('afvb~arg[2]').split("\n")
     del(args[-1])
     operations = dict.fromkeys(args)
     decomp = r2.cmd('pdg').split('\n')
     char_lines = [ x.strip(" ") for x in decomp if 'char' in x]
     breakpoint()
-    operations=proc_lines(char_lines,operations)    
+    operations=proc_lines(char_lines,operations)
 
 
 
