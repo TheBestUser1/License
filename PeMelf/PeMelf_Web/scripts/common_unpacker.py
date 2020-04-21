@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
-#from scripts.r2c import rbin
+from scripts.r2c import rbin
 #it's just in buillding stage :D
-from r2c import *
+#from r2c import *
 import hashlib
 import os
+import sys
+#import f_analyzer as f_a #here I think I should say import scripts.f_analyzer  
+import scripts.f_analyzer as f_a
+
+root_path=''
 
 def find_refs(data):
     i = 1
@@ -23,24 +28,26 @@ def find_function_refs(data,r2):
 def proc_f(refs,r2):
     key = next(iter(refs))
 
-    dumps=[]
-
+    #dumps=[]
+#    breakpoint()
 #dumping packed bytes
+    logic=None
     for i in refs[key]:
         addr=refs[key][i]['adress'][0]
         value=refs[key][i]['values'][0]
-        path_to_dump=os.path.join("dumps","{}_{}".format((r2.cmd("i~:1[1]")\
+        path_to_dump=os.path.join(root_path,"{}_{}".format((r2.cmd("i~:1[1]")\
                                         .split("/")[-1].strip("\n")),addr))
         bin = r2.cmd("wtf {} {} @ {}".format(path_to_dump,value,addr))
         name_of_file=''
+        
         with open(path_to_dump,"rb") as f:
             file = f.read()
             hash_of_file = hashlib.md5(file).hexdigest()
-            name_of_file = os.path.join("dumps","{}".format(hash_of_file))
+            name_of_file = os.path.join(root_path,"{}".format(hash_of_file))
             os.rename(path_to_dump,name_of_file)
-            dumps.append(name_of_file)
-
-#trying to figure out decrypt function
+     #       dumps.append(name_of_file)
+            logic=f_a.main(key,r2,"unpacked_"+hash_of_file,file,logic)
+#trying to figure out decrypt functioni
 
 
 
@@ -55,18 +62,25 @@ def find_bin(r2):
     data_sections = r_obj.cmd("ax~section..data").strip(" ").split(" ")
     data_serialized = [f for f in data_sections if f!='']
     refs = find_refs(data_serialized)
-    breakpoint()
+    
 
     for i in refs:
-        f_refs = r2.find_function(i)
-        proc_f(f_refs,r_obj)
-
+        try:
+            f_refs = r2.find_function(i) #it finds occurences of a function and if an adress and and offset is
+            #breakpoint()                        #passed to that function 
+            if f_refs is None:
+                continue
+            proc_f(f_refs,r_obj)
+        except:
+            pass
         #here we treat the function and try to export everything from
         #data section
 
 
 
 def main(filename=None):
+    global root_path
+    root_path=os.path.join(os.path.abspath('.'),"scripts/dumps")
     if filename == None:
         return 0
     r2 = rbin(filename)
@@ -76,5 +90,6 @@ def main(filename=None):
     return data
 
 
+
 if __name__=='__main__':
-    main("../files/pe3packed.exe")
+    main("../../../Malware_samples/WinEXE/pe3packed.exe")

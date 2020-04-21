@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
-import os
+import os,sys
 import json
 import r2pipe
+
+sys.stderr=object
 
 class rbin:
 
     def __init__(self,file):
-        self.r2=r2pipe.open(file)
+        self.r2=r2pipe.open(file,['-2'])
         self.file = file
 
     def get_info(self): #it builds a json with infos from a binary
@@ -47,16 +49,25 @@ class rbin:
             return False
 
     def find_occurence(self,addr):
+        
+            
         occurences = self.r2.cmd("axt @ {}~[1]".format(addr)).strip("\n").split("\n")#it looks for occurences of a function in assembly or whatever address or hash is given
+        
+        
         return occurences
 
     def find_args(self,addr,blob):       #finds args of a function in assembly (it's just for x86 and cdecl , it searches for pushes)
         if self.check_addr(addr):
+            
             block_function=self.r2.cmd("pd @ {}-32~push,call[4]".format(addr))
             function = block_function.strip('\n').split('\n')
             function.reverse()
             if bool(blob)==False:
                 addr = self.find_occurence(function[0])[0]
+ #               breakpoint()
+                if addr is '':
+                    return None
+                    
                 blob[function[0]]={addr:{}}
             else:
                 blob[function[0]][addr]={}
@@ -76,6 +87,8 @@ class rbin:
     def find_function(self,addr):#it goes in findding functions job
         blob={}
         blob=self.find_args(addr,blob)
+        if blob is None:
+            return None
         occurences = self.find_occurence(next(iter(blob)))
         for i in range(1,len(occurences)):
             blob=self.find_args(occurences[i],blob)

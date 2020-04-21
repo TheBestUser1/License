@@ -4,7 +4,7 @@ from queue import Queue
 from threading import Thread
 
 continue_threads=1
-_locals = locals()
+root_path=''
 def brute_f(buffer,lims):
 
     for brute_v in range(lims[0],lims[1]):
@@ -15,11 +15,11 @@ def brute_f(buffer,lims):
             break
         decrypted=''
 
-        for i in range(len(buffer)):
+        for i in range(len(buffer)): # the down line is written dynamically
             decrypted+=chr(0xff&buffer[i] - brute_v - i)
         if 'This'in decrypted:
             print(brute_v)
-            with open("out_file.bin","w") as d:
+            with open(os.path.join(root_path,lims[2]),"w") as d:
                 d.write(decrypted)
             continue_threads=0
 
@@ -38,12 +38,11 @@ class Brute(Thread):
             finally:
                 self.queue.task_done()
 
-def main(expr=None):
-    if expr == None:
+def main(byte=None,name_of_file=None):
+    if  byte ==None:
         return 0
-    path = os.path.join("dumps","32aecddc3d01f81d3f803501fc2a07ff")
-    with open(path,"rb") as d:
-        byte=d.read()
+    global root_path
+    root_path=os.path.join(os.path.abspath("."),"scripts/dumps")
 
     queue = Queue()
     for x in range(8):
@@ -52,7 +51,7 @@ def main(expr=None):
         worker.start()
     #breakpoint()
     for i in range(8):
-        queue.put((byte,[i*32,(i+1)*32,expr]))
+        queue.put((byte,[i*32,(i+1)*32,name_of_file]))
     queue.join()
 
 if __name__=='__main__':
