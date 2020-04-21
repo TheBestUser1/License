@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import r2pipe
 import os
-import re
+import re,sys
+import importlib.util
 
 
 
@@ -87,7 +88,7 @@ def proc_lines(char_lines,operations):
     return operations
 
 
-def find_logic(r2,f):
+def find_logic(r2,f):#find decrypt function logic
 
     r2.cmd("s {}".format(f))
     args = r2.cmd('afvb~arg[2]').split("\n")
@@ -95,9 +96,9 @@ def find_logic(r2,f):
     operations = dict.fromkeys(args)
     decomp = r2.cmd('pdg').split('\n')
     char_lines = [ x.strip(" ") for x in decomp if 'char' in x]
-    breakpoint()
     operations=proc_lines(char_lines,operations)
 
+    return operations['buffer']['decrypt']
 
 
 
@@ -108,12 +109,31 @@ def find_logic(r2,f):
 
 
 
-def main():
+def main(): #it takes just a bin and a function adrees
     r2 = r2pipe.open("../files/pe3packed.exe")
     function="fcn.00404520"
     r2.cmd('aaa')
-    find_logic(r2,function)
-
+    decrypt_logic=find_logic(r2,function)
+    
+    if 'brute_v' in decrypt_logic:
+        with open("brute_forcer.py","r") as br:
+            lines = br.readlines()
+            up_space = len(lines[17])-len(lines[17].lstrip(" "))
+            lines[18]=(up_space+4)*" "+"decrypted+=chr(0xff&{})\n".format(decrypt_logic)
+            br.close()
+        with open("brute_forcer.py","w") as br:
+            br.writelines(lines)
+            br.close()
+        
+        file_path=os.path.join(os.path.abspath("."),"brute_forcer.py")
+        module_name ="brute_forcer"
+        spec = importlib.util.spec_from_file_location(module_name,file_path)
+        module = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = module
+        spec.loader.exec_module(module)
+        module.main(decrypt_logic)
+    #report = brute_forcer.main(decrypt_logic)
 
 if __name__=='__main__':
+    #breakpoint()
     main()

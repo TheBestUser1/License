@@ -4,18 +4,21 @@ from queue import Queue
 from threading import Thread
 
 continue_threads=1
+_locals = locals()
+def brute_f(buffer,lims):
 
-def brute_f(byte,lims):
-    for i in range(lims[0],lims[1]):
-        decrypted=''
-        #breakpoint()
+    for brute_v in range(lims[0],lims[1]):
+
+
         global continue_threads
         if continue_threads is 0:
             break
-        for j in range(len(byte)):
-            decrypted+=chr(0xff&byte[j]-i-j)
+        decrypted=''
+
+        for i in range(len(buffer)):
+            decrypted+=chr(0xff&buffer[i] - brute_v - i)
         if 'This'in decrypted:
-            print(i)
+            print(brute_v)
             with open("out_file.bin","w") as d:
                 d.write(decrypted)
             continue_threads=0
@@ -35,7 +38,9 @@ class Brute(Thread):
             finally:
                 self.queue.task_done()
 
-def main():
+def main(expr=None):
+    if expr == None:
+        return 0
     path = os.path.join("dumps","32aecddc3d01f81d3f803501fc2a07ff")
     with open(path,"rb") as d:
         byte=d.read()
@@ -45,8 +50,9 @@ def main():
         worker =Brute(queue)
         worker.daemon=True
         worker.start()
+    #breakpoint()
     for i in range(8):
-        queue.put((byte,[i*32,(i+1)*32]))
+        queue.put((byte,[i*32,(i+1)*32,expr]))
     queue.join()
 
 if __name__=='__main__':
