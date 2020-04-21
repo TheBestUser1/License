@@ -55,6 +55,8 @@ def find_bin(r2):
     data_sections = r_obj.cmd("ax~section..data").strip(" ").split(" ")
     data_serialized = [f for f in data_sections if f!='']
     refs = find_refs(data_serialized)
+    breakpoint()
+
     for i in refs:
         f_refs = r2.find_function(i)
         proc_f(f_refs,r_obj)
