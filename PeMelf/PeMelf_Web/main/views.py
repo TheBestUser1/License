@@ -17,12 +17,12 @@ def homepage(request):
 
         file_path=os.path.abspath('.')+"/scripts/"+request.POST['script']
         module_name = request.POST['script'].split('.')[0]
-        
+
         spec = importlib.util.spec_from_file_location(module_name, file_path)
         module = importlib.util.module_from_spec(spec)
         sys.modules[module_name] = module
         spec.loader.exec_module(module)
-        report = module.main(path_to_bin)
+        report = module.main(request,path_to_bin)
         #return redirect("main:homepage")
         return render(request=request,
                         template_name="main/report.html",

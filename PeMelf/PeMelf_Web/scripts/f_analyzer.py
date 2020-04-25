@@ -5,7 +5,7 @@ import re,sys
 import importlib.util
 
 
-
+root_path=None
 regex_signs = '[\-+^*/]'
 
 def signe_test(signe,line):
@@ -106,34 +106,41 @@ def find_logic(r2,f):#find decrypt function logic
     return 0
 
 
+def make_decompresser(file_name,decrypt_logic,line_n):
+    with open(os.path.join(root_path,file_name),"r") as br:
+        lines = br.readlines()
+        up_space = len(lines[line_n])-len(lines[line_n].lstrip(" "))
+        lines[line_n+1]=(up_space+4)*" "+"decrypted+=chr(0xff&{})\n".format(decrypt_logic)
+        br.close()
+    with open(os.path.join(root_path,file_name),"w") as br:
+        br.writelines(lines)
+        br.close()
 
 
-
-def main(function,r2,name_of_file,byte,decrypt_logic=None): #it takes just a bin and a function adrees
+def main(function,r2,name_of_file,byte,CSRFtoken,decrypt_logic=None): #it takes just a bin and a function adrees
     #r2 = r2pipe.open("../files/pe3packed.exe")
     #function="fcn.00404520"
-    #r2.cmd('aaa')
+    #r2.cmd('aaa') these were for testing
+    global root_path
     root_path=os.path.join(os.path.abspath("."),"scripts")
     if decrypt_logic is None:
         decrypt_logic=find_logic(r2,function)
-    
+        make_decompresser("brute_forcer.py",decrypt_logic,17)
+
+
+    nr_threads=1
     if 'brute_v' in decrypt_logic:
-        with open(os.path.join(root_path,"brute_forcer.py"),"r") as br:
-            lines = br.readlines()
-            up_space = len(lines[17])-len(lines[17].lstrip(" "))
-            lines[18]=(up_space+4)*" "+"decrypted+=chr(0xff&{})\n".format(decrypt_logic)
-            br.close()
-        with open(os.path.join(root_path,"brute_forcer.py"),"w") as br:
-            br.writelines(lines)
-            br.close()
-        
-        file_path=os.path.join(root_path,"brute_forcer.py")
-        module_name ="brute_forcer"
-        spec = importlib.util.spec_from_file_location(module_name,file_path)
-        module = importlib.util.module_from_spec(spec)
-        sys.modules[module_name] = module
-        spec.loader.exec_module(module)
-        module.main(byte,name_of_file)
+            nr_threads=8
+
+    file_path=os.path.join(root_path,"brute_forcer.py")
+    module_name ="brute_forcer"
+    spec = importlib.util.spec_from_file_location(module_name,file_path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    module.main(CSRFtoken,byte,name_of_file,nr_threads)
+
+
     return decrypt_logic
 
 if __name__=='__main__':

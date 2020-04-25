@@ -18,4 +18,12 @@ class Document(models.Model):
 
     def __str__(self):
         return self.title
+
+class Document_download(models.Model):
+    name = models.CharField(max_length=50)
+    path_to_file = models.CharField(max_length=250)
+    user_token=models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
 # Create your models here.

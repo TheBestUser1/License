@@ -27,7 +27,7 @@ def scan(r2,data):
 
 
 
-def main(filename=None):
+def main(request=None,filename=None):
     if filename == None:
         return 0
     r2 = rbin(filename)
