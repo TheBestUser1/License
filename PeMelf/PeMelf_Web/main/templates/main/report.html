@@ -21,8 +21,21 @@
 </div>
 <!-- Script output -->
 <div class="col s9">
+{% if function %}
+      <h1>Decompiled:</h1>
+      {% for f in function %}
+
+          <div class="divider"></div>
+          <div class="section">
+            <h5>{{f}}</h5>
+
+            </div>
+
+      {% endfor %}
+
+{% else %}
       <h1>Results:</h1>
-      
+
 {% for result in results %}
       <div class="divider"></div>
         <div class="section">
@@ -30,6 +43,7 @@
 
         </div>
 {% endfor %}
+{% endif %}
 </div>
 
 <!-- Infos -->

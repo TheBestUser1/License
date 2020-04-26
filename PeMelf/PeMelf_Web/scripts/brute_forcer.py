@@ -16,7 +16,7 @@ def brute_f(buffer,lims):
         decrypted=''
 
         for i in range(len(buffer)): # the down line is written dynamically
-            
+            decrypted+=chr(0xff&buffer[i] - brute_v - i)
         if 'This'in decrypted:
             path_to_file = os.path.join(root_path,lims[2])
             db.update_db_file(lims[2],path_to_file,token)

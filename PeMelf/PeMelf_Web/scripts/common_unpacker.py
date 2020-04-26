@@ -8,6 +8,7 @@ import sys
 #import f_analyzer as f_a #here I think I should say import scripts.f_analyzer
 import scripts.f_analyzer as f_a
 import scripts.db_updater as db
+import json
 
 root_path=''
 CSRFtoken,logic=None,None
@@ -47,18 +48,19 @@ def proc_f(refs,r2):
             name_of_file = os.path.join(root_path,"{}".format(hash_of_file))
             os.rename(path_to_dump,name_of_file)
      #       dumps.append(name_of_file)
-            breakpoint()
+
             db.update_db_file(name_of_file,root_path,CSRFtoken)
             logic=f_a.main(function,r2,"unpacked_"+hash_of_file,file,CSRFtoken,logic)
 #trying to figure out decrypt functioni
 
+    data = json.loads(r2.cmd("pdgj"))['code']
+    entry_dis_f = {'function_offset':function,'code':data}
+
+    return entry_dis_f
 
 
-    return True
 
-
-
-def find_bin(r2):
+def find_bin(r2,dissasembly_functions):
 
     r_obj=r2.get_obj()
     r_obj.cmd("aaa")
@@ -67,18 +69,21 @@ def find_bin(r2):
     refs = find_refs(data_serialized)
 
 
+
     for i in refs:
         try:
             f_refs = r2.find_function(i) #it finds occurences of a function and if an adress and and offset is
             #breakpoint()                        #passed to that function here I should check for that dictionary to do the magic
-             if f_refs is None:
+            if f_refs is None:
                 continue
-            proc_f(f_refs,r_obj)
+            breakpoint()
+            dissasembly_functions['function'].append(proc_f(f_refs,r_obj))
+
         except:
             pass
         #here we treat the function and try to export everything from
         #data section
-
+    return dissasembly_functions
 
 
 def main(request=None,filename=None):
@@ -88,12 +93,12 @@ def main(request=None,filename=None):
     if filename == None:
         return 0
     r2 = rbin(filename)
-    data = r2.get_info()
-    bin_data = find_bin(r2)
 
+    data = r2.get_info() #it has just info of bin file
+    data['function']=[]
 
-
-    return data
+    bin_data = find_bin(r2,data) #after processing the bin it has also some code of decompiled functions
+    return bin_data
 
 
 
