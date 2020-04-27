@@ -76,7 +76,7 @@ def find_bin(r2,dissasembly_functions):
             #breakpoint()                        #passed to that function here I should check for that dictionary to do the magic
             if f_refs is None:
                 continue
-            breakpoint()
+            
             dissasembly_functions['function'].append(proc_f(f_refs,r_obj))
 
         except:

@@ -27,11 +27,19 @@
 
           <div class="divider"></div>
           <div class="section">
-            <h5>{{f}}</h5>
-
+            <h5>Offset of decompiled function: {{f.function_offset}}</h5>
+          </div>
+          <div class="divider"></div>
+          <div class="section">
+            {% autoescape on %}
+            <h5>{{f.code | linebreaksbr }}</h5>
+            {% endautoescape %}
             </div>
 
       {% endfor %}
+      <div class="divider"></div>
+      
+
 
 {% else %}
       <h1>Results:</h1>
