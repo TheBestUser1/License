@@ -21,5 +21,6 @@ app_name = 'main'
 urlpatterns = [
    path("",views.homepage,name="homepage"),
   # path("test/",views.test, name="test")
-  path("upload/",views.upload, name='upload')
+  path("upload/",views.upload, name='upload'),
+  path("download/",views.download,name='download')
 ]

@@ -49,7 +49,7 @@ def proc_f(refs,r2):
             os.rename(path_to_dump,name_of_file)
      #       dumps.append(name_of_file)
 
-            db.update_db_file(name_of_file,root_path,CSRFtoken)
+            db.update_db_file(hash_of_file,root_path,CSRFtoken)
             logic=f_a.main(function,r2,"unpacked_"+hash_of_file,file,CSRFtoken,logic)
 #trying to figure out decrypt functioni
 
@@ -76,7 +76,7 @@ def find_bin(r2,dissasembly_functions):
             #breakpoint()                        #passed to that function here I should check for that dictionary to do the magic
             if f_refs is None:
                 continue
-            
+
             dissasembly_functions['function'].append(proc_f(f_refs,r_obj))
 
         except:

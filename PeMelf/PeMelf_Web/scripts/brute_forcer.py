@@ -19,7 +19,7 @@ def brute_f(buffer,lims):
             decrypted+=chr(0xff&buffer[i] - brute_v - i)
         if 'This'in decrypted:
             path_to_file = os.path.join(root_path,lims[2])
-            db.update_db_file(lims[2],path_to_file,token)
+            db.update_db_file(lims[2],root_path,token)
             with open(path_to_file,"w") as d:
                 d.write(decrypted)
             continue_threads=0

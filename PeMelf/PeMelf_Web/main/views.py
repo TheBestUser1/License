@@ -1,12 +1,13 @@
 from django.shortcuts import render,redirect
-from .models import Techniques, Document
-from django.http import HttpResponseRedirect
+from .models import Techniques, Document, Document_download
+from django.http import HttpResponseRedirect,HttpResponse
 from .my_forms import UploadFileForm
 from django.utils import timezone
 
+
 import sys,os
 import importlib.util
-
+import mimetypes
 
 def homepage(request):
     if request.method =="POST":
@@ -52,3 +53,23 @@ def upload(request):
      return render(request=request,
                     template_name="main/upload.html",
                     context={"form":form})
+
+
+def download(request):
+    if request.method == 'GET':
+        files_of_user = Document_download.objects.filter(user_token=request.COOKIES['csrftoken'])\
+        .values()
+        breakpoint()
+        path_to_gzip= "scripts/dumps/{}.gzip".format(files_of_user[0]['id'])
+
+        tar_command = 'tar -czf {}'.format(path_to_gzip)
+        for file in files_of_user:
+            tar_command+=' '+file['path_to_file']
+        os.system(tar_command)
+    
+    fl = open(path_to_gzip, 'rb')
+    mime_type, _ = mimetypes.guess_type(path_to_gzip)
+    response = HttpResponse(fl,content_type='application/gzip')
+    response['Content-Disposition']='attachment; filename={}'.format(path_to_gzip)
+    Document_download.objects.all().delete() #erases all entrys of unpacking
+    return response
