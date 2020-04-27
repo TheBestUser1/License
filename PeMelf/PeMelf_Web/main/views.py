@@ -39,8 +39,6 @@ def upload(request):
         form = UploadFileForm(request.POST, request.FILES)
 
         if form.is_valid():
-            #form.save()
-
             file = form.save(commit=False)
             file.myfile =request.FILES['myfile']
             file.date_added  = timezone.now()
@@ -59,14 +57,14 @@ def download(request):
     if request.method == 'GET':
         files_of_user = Document_download.objects.filter(user_token=request.COOKIES['csrftoken'])\
         .values()
-        breakpoint()
+        
         path_to_gzip= "scripts/dumps/{}.gzip".format(files_of_user[0]['id'])
 
         tar_command = 'tar -czf {}'.format(path_to_gzip)
         for file in files_of_user:
             tar_command+=' '+file['path_to_file']
         os.system(tar_command)
-    
+
     fl = open(path_to_gzip, 'rb')
     mime_type, _ = mimetypes.guess_type(path_to_gzip)
     response = HttpResponse(fl,content_type='application/gzip')
