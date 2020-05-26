@@ -50,10 +50,12 @@ def proc_f(refs,r2):
      #       dumps.append(name_of_file)
 
             db.update_db_file(hash_of_file,root_path,CSRFtoken)
+             
             logic=f_a.main(function,r2,"unpacked_"+hash_of_file,file,CSRFtoken,logic)
 #trying to figure out decrypt functioni
 
     data = json.loads(r2.cmd("pdgj"))['code']
+    
     entry_dis_f = {'function_offset':function,'code':data}
 
     return entry_dis_f
@@ -68,12 +70,12 @@ def find_bin(r2,dissasembly_functions):
     data_serialized = [f for f in data_sections if f!='']
     refs = find_refs(data_serialized)
 
-
-
+    
+    
     for i in refs:
         try:
             f_refs = r2.find_function(i) #it finds occurences of a function and if an adress and and offset is
-            #breakpoint()                        #passed to that function here I should check for that dictionary to do the magic
+           # breakpoint()                        #passed to that function here I should check for that dictionary to do the magic
             if f_refs is None:
                 continue
 
@@ -83,6 +85,8 @@ def find_bin(r2,dissasembly_functions):
             pass
         #here we treat the function and try to export everything from
         #data section
+            
+        #dissasembly_functions['function'].append(proc_f(f_refs,r_obj))
     return dissasembly_functions
 
 
@@ -98,6 +102,7 @@ def main(request=None,filename=None):
     data['function']=[]
 
     bin_data = find_bin(r2,data) #after processing the bin it has also some code of decompiled functions
+    
     return bin_data
 
 

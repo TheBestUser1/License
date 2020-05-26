@@ -57,17 +57,22 @@ def download(request):
     if request.method == 'GET':
         files_of_user = Document_download.objects.filter(user_token=request.COOKIES['csrftoken'])\
         .values()
-        
-        path_to_gzip= "scripts/dumps/{}.gzip".format(files_of_user[0]['id'])
 
-        tar_command = 'tar -czf {}'.format(path_to_gzip)
+        path_to_gzip= "{}.gzip".format(files_of_user[0]['id'])
+        abs_path = os.path.join(os.path.abspath("."),"scripts/dumps/")
+        
+        cd = f'cd {abs_path}'
+        
+        tar_command = '{};tar -czf {}'.format(cd,path_to_gzip)
         for file in files_of_user:
             tar_command+=' '+file['path_to_file']
+        
         os.system(tar_command)
-
-    fl = open(path_to_gzip, 'rb')
-    mime_type, _ = mimetypes.guess_type(path_to_gzip)
+    
+    path_f = os.path.join("scripts/dumps/",path_to_gzip)
+    fl = open(path_f, 'rb')
+    mime_type, _ = mimetypes.guess_type(path_f)
     response = HttpResponse(fl,content_type='application/gzip')
-    response['Content-Disposition']='attachment; filename={}'.format(path_to_gzip)
+    response['Content-Disposition']='attachment; filename={}'.format(path_f)
     Document_download.objects.all().delete() #erases all entrys of unpacking
     return response

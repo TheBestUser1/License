@@ -3,7 +3,7 @@ import os,sys
 import json
 import r2pipe
 
-sys.stderr=object
+#sys.stderr=object
 
 class rbin:
 

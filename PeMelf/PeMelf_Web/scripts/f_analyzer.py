@@ -136,7 +136,7 @@ def main(function,r2,name_of_file,byte,CSRFtoken,decrypt_logic=None): #it takes 
     module_name ="brute_forcer"
     spec = importlib.util.spec_from_file_location(module_name,file_path)
     module = importlib.util.module_from_spec(spec)
-    sys.modules[module_name] = module
+    sys.modules[module.__name__] = module
     spec.loader.exec_module(module)
     module.main(CSRFtoken,byte,name_of_file,nr_threads)
 

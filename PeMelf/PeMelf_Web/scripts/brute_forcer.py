@@ -11,7 +11,7 @@ def brute_f(buffer,lims):
 
 
         global continue_threads
-        if continue_threads is 0:
+        if continue_threads == 0:
             break
         decrypted=''
 

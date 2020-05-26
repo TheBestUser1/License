@@ -23,7 +23,8 @@ int main(int argc, char**argv) {
 
 	_func run = (_func)addr_exec;
 	char file[] = "ceva";
-	run((void*)((CHAR*)BUFF2),(DWORD*)size,file,(char*)'r');
+	std::cout<<"It works guys";
+	//	run((void*)((CHAR*)BUFF2),(DWORD*)size,file,(char*)'r');
 
 	return 0;
 }
