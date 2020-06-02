@@ -110,7 +110,7 @@ def make_decompresser(file_name,decrypt_logic,line_n):
     with open(os.path.join(root_path,file_name),"r") as br:
         lines = br.readlines()
         up_space = len(lines[line_n])-len(lines[line_n].lstrip(" "))
-        lines[line_n+1]=(up_space+4)*" "+"decrypted+=chr(0xff&{})\n".format(decrypt_logic)
+        lines[line_n+1]=(up_space+4)*" "+"decrypted[i]=0xff&{}\n".format(decrypt_logic)
         br.close()
     with open(os.path.join(root_path,file_name),"w") as br:
         br.writelines(lines)
@@ -136,7 +136,7 @@ def main(function,r2,name_of_file,byte,CSRFtoken,decrypt_logic=None): #it takes 
     module_name ="brute_forcer"
     spec = importlib.util.spec_from_file_location(module_name,file_path)
     module = importlib.util.module_from_spec(spec)
-    sys.modules[module.__name__] = module
+    sys.modules[module_name] = module
     spec.loader.exec_module(module)
     module.main(CSRFtoken,byte,name_of_file,nr_threads)
 
