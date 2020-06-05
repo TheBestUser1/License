@@ -22,5 +22,9 @@ class vm:
         command_f = shlex.split(command_f)
         pid = subprocess.Popen(command_f)
 
-    def upload_file(self,file):
+    def upload_file(self,path_of_file,filename):
+        path_to_upload = f"Desktop/malwares/{filename}"
+        command = f"scp -i {self.key} {path_of_file} {self.user}@{self.host}:{path_to_upload}"
+        command = shlex.split(command)
+        pid = subprocess.Popen(command)
         return 0

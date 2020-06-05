@@ -60,15 +60,15 @@ def download(request):
 
         path_to_gzip= "{}.gzip".format(files_of_user[0]['id'])
         abs_path = os.path.join(os.path.abspath("."),"scripts/dumps/")
-        
+
         cd = f'cd {abs_path}'
-        
+
         tar_command = '{};tar -czf {}'.format(cd,path_to_gzip)
         for file in files_of_user:
             tar_command+=' '+file['path_to_file']
-        
+
         os.system(tar_command)
-    
+
     path_f = os.path.join("scripts/dumps/",path_to_gzip)
     fl = open(path_f, 'rb')
     mime_type, _ = mimetypes.guess_type(path_f)

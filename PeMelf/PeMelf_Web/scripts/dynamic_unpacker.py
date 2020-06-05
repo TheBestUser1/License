@@ -1,12 +1,35 @@
-#from scripts.vmc import vm
-#from scripts.r2c import rbin
-from vmc import vm
+from scripts.vmc import vm
+from scripts.r2c import rbin
+import os,hashlib
+import time
+#from vmc import vm
+
+CSRFtoken,root_path=None,None
+
+def hash_file(filename):
+    with open(filename,"rb") as f:
+        file = f.read()
+        hash_of_file = hashlib.md5(file).hexdigest()
+        return hash_of_file
 
 
 
-def main():
-    a = vm("cata","192.168.142.131","keys/windows")
-    a.start_r_debug(".\\Desktop\\malwares\\redaman.exe")
+def main(request=None,filename=None):
+    global CSRFtoken,root_path
+    CSRFtoken = request.COOKIES['csrftoken']
+    root_path = os.path.join(os.path.abspath("."),"scripts/dumps")
+    hash =hash_file(filename)
+
+    breakpoint()
+    a = vm("cata","192.168.142.131","scripts/keys/windows")
+    a.upload_file(filename,hash)
+    time.sleep(5)
+    a.start_r_debug(f".\\Desktop\\malwares\\{hash}")
+
+    r2 = rbin("http://192.168.142.131:1337")
+    data = r2.get_info()
+
+    return data
 
 if __name__=='__main__':
     main()
