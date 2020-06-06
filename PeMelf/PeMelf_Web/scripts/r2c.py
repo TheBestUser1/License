@@ -65,7 +65,7 @@ class rbin:
             if bool(blob)==False:
                 addr = self.find_occurence(function[0])[0]
  #               breakpoint()
-                if addr is '':
+                if addr == '':
                     return None
 
                 blob[function[0]]={addr:{}}
@@ -94,7 +94,7 @@ class rbin:
             blob=self.find_args(occurences[i],blob)
         return blob
 
-    def continue(self):
+    def con(self):
         self.r2.cmd("dc")
 
     def auto_analyze(self):
@@ -104,14 +104,19 @@ class rbin:
         self.r2.cmd(f"db {breakpoint}")
 
     def get_current(self):
-        return self.r2.cmd("s")
+        return int(self.r2.cmd("s").strip("\n"),16)
 
     def get_entry(self):
-        return self.r2.cmd("ie~:0[1]")
+        return int(self.r2.cmd("ie~:0[1]").strip("\n"),16)
 
-    def get_addres_of_api(dll,api):
-        apis = self.r2.cmd(f"dmi {dll}~{api}")
-        return apis
+    def get_addres_of_api(self,dll,api):
+        apis = self.r2.cmd(f"dmi {dll}~{api}").split("\r\n")
+        addr = ''
+        for i in apis:
+            new_i = i.split(" ")
+            if new_i[-1] == api:
+                addr= int(new_i[3],16)
+        return addr
 
 
 

@@ -18,12 +18,15 @@ def debug_binary(data,r2):
     entry = r2.get_entry()
     r2.set_breakpoint(entry)
     current = r2.get_current()
-    breakpoint()
-    while current!=entry:
-        r2.continue()
+    while current != entry:
+        r2.con()
         current = r2.get_current()
-    VirtualAlloc = r2.get_addres_of_api("KERNELBASE.dll","VirtualAlloc")
 
+    breakpoint()
+    VirtualAlloc = r2.get_addres_of_api("KERNELBASE.dll","VirtualAlloc")
+    r2.set_breakpoint(VirtualAlloc)
+    r2.con()
+    current = r2.get_current()
 
 
 def main(request=None,filename=None):
@@ -40,7 +43,7 @@ def main(request=None,filename=None):
 
     r2 = rbin("http://192.168.142.131:1337")
     data = r2.get_info()
-
+    debug_binary(data,r2)
     return data
 
 if __name__=='__main__':
