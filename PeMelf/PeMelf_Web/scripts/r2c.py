@@ -118,6 +118,24 @@ class rbin:
                 addr= int(new_i[3],16)
         return addr
 
+    def get_ret_addres_from_api(self,api):
+        self.r2.cmd(f'db -{api}')
+        addr_ret=self.r2.cmd(f"pd @ {api}~ret:0[1]").strip("\n") #maybe it prints another value insted of addres
+        addr_ret=int(addr_ret,16)
+        return addr_ret
+
+    def get_eax(self):
+        return self.r2.cmd("dr~eax[1]").strip("\n")
+
+    def examine_addr(self,addr,size):
+        return self.r2.cmd(f"pxw {size} @ {addr}")
+
+    def get_size_m_map(self,addr):
+        addr= addr.strip("0x")
+        v_range = self.r2.cmd(f"dm~{addr}[0,2]").strip("\n")
+        v_range = v_range.split(" ")
+        to_dump = int(v_range[1],16)-int(v_range[0],16)
+        return to_dump
 
 
 def main(filename=None):
