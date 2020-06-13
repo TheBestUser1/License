@@ -1,8 +1,9 @@
 from scripts.vmc import vm
 from scripts.r2c import rbin
 import os,hashlib
-import time
+import time,json
 import scripts.db_updater as db
+import scripts.yara_simple_scan as yr
 #from vmc import vm
 
 CSRFtoken,root_path=None,None
@@ -43,7 +44,6 @@ def debug_binary(data,r2,filename,conex):
             allocated_p.append(r2.get_ax())
 
 
-
         if current == VirtualProtect:
             if allocated_p !=[]:
                 for addr in allocated_p:
@@ -53,8 +53,20 @@ def debug_binary(data,r2,filename,conex):
                         win_path_to_dump = f"Desktop/malwares/dumps/{addr[2:]}_{filename}"
                         r2.get_obj().cmd(f"wtf {win_path_to_dump} {size_to_dump} @ {addr}")
                         conex.get_file(win_path_to_dump,root_path)
+                        time.sleep(2)
                         db.update_db_file(f"{addr[2:]}_{filename}",root_path,CSRFtoken)
-                        always = 0
+
+                        r3=rbin(os.path.join(root_path,f"{addr[2:]}_{filename}"))
+                        r3.auto_analyze()
+                        r3=yr.read_rules(r3)
+
+                        data_s = json.loads(r3.cmd("ij"))
+                        item_l = {'file_arch':data_s['bin']['arch'],'file_class':data_s['bin']['class']}
+                        item_l = yr.scan(r3,item_l)
+                        
+                        data['info_dumps'].append(item_l)
+
+            always = 0
 
 
     return data
@@ -72,7 +84,7 @@ def main(request=None,filename=None):
 
     r2 = rbin("http://192.168.142.131:1337")
     data = r2.get_info()
-    data['info_dump'] = ['test']
+    data['info_dumps'] = []
     data = debug_binary(data,r2,hash,a)
     return data
 
