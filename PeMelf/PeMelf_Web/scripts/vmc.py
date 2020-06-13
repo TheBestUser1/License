@@ -21,10 +21,17 @@ class vm:
         command_f = f"ssh -i {self.key} {self.user}@{self.host} \"{command}\""
         command_f = shlex.split(command_f)
         pid = subprocess.Popen(command_f)
+        return 0
 
     def upload_file(self,path_of_file,filename):
         path_to_upload = f"Desktop/malwares/{filename}"
         command = f"scp -i {self.key} {path_of_file} {self.user}@{self.host}:{path_to_upload}"
+        command = shlex.split(command)
+        pid = subprocess.Popen(command)
+        return 0
+
+    def get_file(self,file,path_to_dump):
+        command = f"scp -i {self.key} {self.user}@{self.host}:{file} {path_to_dump}"
         command = shlex.split(command)
         pid = subprocess.Popen(command)
         return 0

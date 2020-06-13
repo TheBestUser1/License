@@ -104,35 +104,39 @@ class rbin:
         self.r2.cmd(f"db {breakpoint}")
 
     def get_current(self):
-        return int(self.r2.cmd("s").strip("\n"),16)
+        return self.r2.cmd("s").strip("\n")
 
     def get_entry(self):
-        return int(self.r2.cmd("ie~:0[1]").strip("\n"),16)
+        return self.r2.cmd("ie~:0[1]").strip("\r\n")
 
     def get_addres_of_api(self,dll,api):
         apis = self.r2.cmd(f"dmi {dll}~{api}").split("\r\n")
         addr = ''
         for i in apis:
             new_i = i.split(" ")
+            new_i[-1] = new_i[-1].strip("\r")
             if new_i[-1] == api:
-                addr= int(new_i[3],16)
-        return addr
+                addr= new_i[3]
+                return addr
+        return None
 
     def get_ret_addres_from_api(self,api):
         self.r2.cmd(f'db -{api}')
-        addr_ret=self.r2.cmd(f"pd @ {api}~ret:0[1]").strip("\n") #maybe it prints another value insted of addres
-        addr_ret=int(addr_ret,16)
+        addr_ret=self.r2.cmd(f"pd @ {api}~ret:0[1]").strip("\r\n") #maybe it prints another value insted of addres
+
         return addr_ret
 
-    def get_eax(self):
-        return self.r2.cmd("dr~eax[1]").strip("\n")
+    def get_ax(self):
+        return self.r2.cmd("dr~ax[1]").strip("\r\n")
 
     def examine_addr(self,addr,size):
         return self.r2.cmd(f"pxw {size} @ {addr}")
 
     def get_size_m_map(self,addr):
-        addr= addr.strip("0x")
-        v_range = self.r2.cmd(f"dm~{addr}[0,2]").strip("\n")
+        addr= addr[2:]
+        search_v = '0x'+'0'*(16-len(addr))+addr
+        breakpoint()
+        v_range = self.r2.cmd(f"dm~^{search_v}[0,2]").strip("\r\n")
         v_range = v_range.split(" ")
         to_dump = int(v_range[1],16)-int(v_range[0],16)
         return to_dump
