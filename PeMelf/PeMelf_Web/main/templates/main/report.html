@@ -22,69 +22,14 @@
 <!-- Script output -->
 <div class="col s9">
 {% if function %}
-      <h1>Decompiled:</h1>
-      {% for f in function %}
-
-          <div class="divider"></div>
-          <div class="section">
-            <h5>Offset of decompiled function: {{f.function_offset}}</h5>
-          </div>
-          <div class="divider"></div>
-          <div class="section">
-            {% autoescape on %}
-            <h5>{{f.code | linebreaksbr }}</h5>
-            {% endautoescape %}
-            </div>
-
-      {% endfor %}
-      <div class="divider"></div>
-      <div class="section">
-          <a class="waves-effect waves-light btn-large" href='/download'><i class="material-icons right">Raw</i>Download</a>
-
-      </div>
+    {% include 'main/includes/function.html' %}
 
 {% elif info_dumps %}
 
-{% for info_dump in info_dumps %}
+    {% include 'main/includes/info_dumps.html' %}
 
-  <div class="divider"></div>
-    <div class="section">
-      <h5 class="center-align"> Dumped a {{info_dump.file_class}} on arch {{info_dump.file_arch}}  </h5>
-
-
-      </div>
-
-    <div class="divider"></div>
-    <div class="section">
-
-    <h2> Yara hits {{info_dump.nr_of_hits}}/{{info_dump.nr_of_rules}}</h2>
-
-    </div>
-    {% for result in info_dump.results %}
-          <div class="divider"></div>
-            <div class="section">
-              <h5 class="center-align">{{result}}</h5>
-
-            </div>
-    {% endfor %}
-
-    <div class="divider"></div>
-    <div class="section">
-        <a class="waves-effect waves-light btn-large " href='/download'><i class="material-icons right">Raw</i>Download</a>
-    </div>
-{% endfor %}
-
-
-{% else %}
-      <h1>Yara hits {{nr_of_hits}}/{{nr_of_rules}}. Results:</h1>
-
-{% for result in results %}
-      <div class="divider"></div>
-        <div class="section">
-          <h5 class="center-align">{{result}}</h5>
-
-        </div>
-{% endfor %}
+{% else %}  <!-- Here is the default results for yara -->
+    {% include 'main/includes/Results.html' %}
 {% endif %}
 </div>
 

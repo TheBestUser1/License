@@ -1,0 +1,20 @@
+<h1>Decompiled:</h1>
+{% for f in function %}
+
+    <div class="divider"></div>
+    <div class="section">
+      <h5>Offset of decompiled function: {{f.function_offset}}</h5>
+    </div>
+    <div class="divider"></div>
+    <div class="section">
+      {% autoescape on %}
+      <h5>{{f.code | linebreaksbr }}</h5>
+      {% endautoescape %}
+      </div>
+
+{% endfor %}
+<div class="divider"></div>
+<div class="section">
+    <a class="waves-effect waves-light btn-large" href='/download'><i class="material-icons right">Raw</i>Download</a>
+
+</div>

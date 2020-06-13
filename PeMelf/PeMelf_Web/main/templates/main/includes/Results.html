@@ -1,0 +1,9 @@
+<h1>Yara hits {{nr_of_hits}}/{{nr_of_rules}}. Results:</h1>
+
+{% for result in results %}
+<div class="divider"></div>
+  <div class="section">
+    <h5 class="center-align">{{result}}</h5>
+
+  </div>
+{% endfor %}
