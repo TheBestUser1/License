@@ -135,7 +135,6 @@ class rbin:
     def get_size_m_map(self,addr):
         addr= addr[2:]
         search_v = '0x'+'0'*(16-len(addr))+addr
-        breakpoint()
         v_range = self.r2.cmd(f"dm~^{search_v}[0,2]").strip("\r\n")
         v_range = v_range.split(" ")
         to_dump = int(v_range[1],16)-int(v_range[0],16)

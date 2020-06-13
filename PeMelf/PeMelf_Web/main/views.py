@@ -24,6 +24,7 @@ def homepage(request):
         sys.modules[module_name] = module
         spec.loader.exec_module(module)
         report = module.main(request,path_to_bin)
+        
         #return redirect("main:homepage")
         return render(request=request,
                         template_name="main/report.html",

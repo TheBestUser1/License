@@ -34,4 +34,6 @@ class vm:
         command = f"scp -i {self.key} {self.user}@{self.host}:{file} {path_to_dump}"
         command = shlex.split(command)
         pid = subprocess.Popen(command)
+        close_server_command =f"ssh -i {self.key} {self.user}@{self.host} powershell 'stop-process -Name radare2'"
+        pid = subprocess.Popen(shlex.split(close_server_command))
         return 0

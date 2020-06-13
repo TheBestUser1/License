@@ -42,7 +42,7 @@ def debug_binary(data,r2,filename,conex):
         if current == ret_virtual_alloc:
             allocated_p.append(r2.get_ax())
 
-        breakpoint()
+
 
         if current == VirtualProtect:
             if allocated_p !=[]:
@@ -53,9 +53,11 @@ def debug_binary(data,r2,filename,conex):
                         win_path_to_dump = f"Desktop/malwares/dumps/{addr[2:]}_{filename}"
                         r2.get_obj().cmd(f"wtf {win_path_to_dump} {size_to_dump} @ {addr}")
                         conex.get_file(win_path_to_dump,root_path)
-                        db.update_db_file(filename,root_path,CSRFtoken)
+                        db.update_db_file(f"{addr[2:]}_{filename}",root_path,CSRFtoken)
                         always = 0
 
+
+    return data
 def main(request=None,filename=None):
     global CSRFtoken,root_path
     CSRFtoken = request.COOKIES['csrftoken']
@@ -70,7 +72,8 @@ def main(request=None,filename=None):
 
     r2 = rbin("http://192.168.142.131:1337")
     data = r2.get_info()
-    debug_binary(data,r2,hash,a)
+    data['info_dump'] = ['test']
+    data = debug_binary(data,r2,hash,a)
     return data
 
 if __name__=='__main__':
