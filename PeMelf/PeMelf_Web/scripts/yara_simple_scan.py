@@ -16,9 +16,13 @@ def read_rules(r2):
 
 
 def scan(r2,data):
+    nr_of_rules = r2.cmd("yara list").split("\n")
+    del nr_of_rules[-1]
 
     data_yara=r2.cmd("yara scan").split("\n")
     del data_yara[-1]
+    data['nr_of_hits']=len(data_yara)
+    data['nr_of_rules']=len(nr_of_rules)
     data['results']=data_yara
     return data
 
@@ -34,7 +38,8 @@ def main(request=None,filename=None):
     data=r2.get_info()
 
     r2=read_rules(r2)
+    
     return scan(r2,data)
 
 if __name__=="__main__":
-    main("../files/pe2.exe")
+    main(request='',filename="../files/redaman.exe")

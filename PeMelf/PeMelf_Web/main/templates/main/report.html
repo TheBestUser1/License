@@ -57,7 +57,7 @@
     <div class="divider"></div>
     <div class="section">
 
-    <h2> Yara hits:</h2>
+    <h2> Yara hits {{info_dump.nr_of_hits}}/{{info_dump.nr_of_rules}}</h2>
 
     </div>
     {% for result in info_dump.results %}
@@ -76,7 +76,7 @@
 
 
 {% else %}
-      <h1>Results:</h1>
+      <h1>Yara hits {{nr_of_hits}}/{{nr_of_rules}}. Results:</h1>
 
 {% for result in results %}
       <div class="divider"></div>
