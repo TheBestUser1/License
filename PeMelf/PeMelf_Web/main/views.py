@@ -12,23 +12,29 @@ import mimetypes
 def homepage(request):
     if request.method =="POST":
     #breakpoint()
-        filename=Document.objects.filter(user_token=request.COOKIES['csrftoken']\
-        ).order_by('-date_added').values()[0]['myfile']
-        path_to_bin=os.path.join(os.path.abspath("files"),filename)
+        try:
+            filename=Document.objects.filter(user_token=request.COOKIES['csrftoken']\
+            ).order_by('-date_added').values()[0]['myfile']
 
-        file_path=os.path.abspath('.')+"/scripts/"+request.POST['script']
-        module_name = request.POST['script'].split('.')[0]
+            path_to_bin=os.path.join(os.path.abspath("files"),filename)
 
-        spec = importlib.util.spec_from_file_location(module_name, file_path)
-        module = importlib.util.module_from_spec(spec)
-        sys.modules[module_name] = module
-        spec.loader.exec_module(module)
-        report = module.main(request,path_to_bin)
-        
-        #return redirect("main:homepage")
-        return render(request=request,
-                        template_name="main/report.html",
-                        context=report)
+            file_path=os.path.abspath('.')+"/scripts/"+request.POST['script']
+            module_name = request.POST['script'].split('.')[0]
+
+            spec = importlib.util.spec_from_file_location(module_name, file_path)
+            module = importlib.util.module_from_spec(spec)
+            sys.modules[module_name] = module
+            spec.loader.exec_module(module)
+            report = module.main(request,path_to_bin)
+
+            #return redirect("main:homepage")
+            return render(request=request,
+                            template_name="main/report.html",
+                            context=report)
+        except IndexError:
+            return render(request=request,
+                        template_name="main/error.html"
+                        )
 
     return render(request=request,
                     template_name="main/main.html",
